@@ -11,6 +11,8 @@ new class extends Component {
     public array $messages = [];
     public string $message = '';
 
+    public Room $room;
+
     public function addMessage()
     {
         MessageSent::dispatch(auth()->user()->name, $this->message);
@@ -18,7 +20,8 @@ new class extends Component {
         $this->reset('message');
     }
 
-    #[On('echo:messages,MessageSent')]
+    // #[On('echo-private:messages,MessageSent')]
+    #[On('echo-private:messages.rooms.{room.id},MessageSent')]
     public function onMessageSent($event)
     {
         $this->messages[] = $event;
